@@ -2,7 +2,7 @@
     <div class="mu-selectbox mu-multibox" v-bind:class="{on:isPop , disabled:isDisabled}"  v-on:mouseleave="onMouseLeave" >
         <button class="mu-value" @click="onClickPopItemList">{{title}}</button>
         <ul class="mu-list">
-            
+           
             <div class="mu-checkbox">
                 <input type="checkbox" v-bind:id="checkAllId" v-model="isCheckAll" @click="onClickItem(null)" >
                 <label v-bind:for="checkAllId">{{allLabelName}}</label>
@@ -10,16 +10,17 @@
         
             <li v-for="data in checkComboDatas" v-bind:key="data[valueName]">                
                 <div class="mu-checkbox">
-					<input type="checkbox" v-bind:id="data.id" v-bind:value="data[valueName]"  v-model="selectedItem" @click="onClickItem(data)">
+					<input type="checkbox" v-bind:id="data.id" v-bind:value="data[valueName]"  v-model="selectedItem" @change="onChangeItem()">
 					<label v-bind:for="data.id">{{data[labelName]}}</label>
 				</div> 
-            </li>                        
+            </li>
+
         </ul>
     </div>
 </template>
 <script>
 
-import util from "../util/util"
+import util from "../util/util";
 
 export default {
     props:{
@@ -50,6 +51,11 @@ export default {
             default:null
         }
     },
+    model: {
+        prop: 'selectValue',
+        //event: 'change'
+    },
+    
     data(){
         return{            
             //isCheckAll:true,
@@ -63,7 +69,7 @@ export default {
        isCheckAll:{
            get:function(){
                let allChk = false;
-               if (this.checkComboDatas){
+               if (this.checkComboDatas && this.selectedItem){
                    if (this.checkComboDatas.length == this.selectedItem.length){
                        allChk = true;
                    }
@@ -82,6 +88,7 @@ export default {
                     });                
                }
                this.selectedItem = selectedItem;
+               this.onChangeItem();
            }
        }
     },
@@ -96,28 +103,25 @@ export default {
         },
         onClickPopItemList(){
             this.isPop = !this.isPop;
-        },                        
-        onClickItem(item){                        
-            this.$emit("onChange",item);         
+        },                                         
+        onChangeItem(){                            
+            //this.$emit("onChange",item);       
+            this.$emit('input',this.selectedItem);
         },
         getSelectedItem(){
-            
             //선택된 실제 ITEM을 넘긴다.
             //return this.selectedItem;  
-        },                         
-        /* 선택된 Combo Value 정보를 얻는다.
-        */
-        getSelectedValue(){            
-            return this.selectedItem;
         }
     },
     watch:{
         datas:{
-            immediate: true,
+            //immediate: true,
             handler(value){                
                 let vi = this;
                 let selctedValue = [];
-                this.checkComboDatas = value;
+
+                this.checkComboDatas = JSON.parse(JSON.stringify(value));
+                //this.checkComboDatas = value;
 
                  this._.map(this.checkComboDatas,(info) =>{
                     info.id = util.getRandomId(info[vi.valueName]);                    
@@ -130,16 +134,18 @@ export default {
                     */
                     selctedValue.push(info[vi.valueName]);
                 });       
-                
                 this.selectedItem = selctedValue;
+                this.onChangeItem();
             }
         },
         selectValue:{
-            immediate: true,                       
+            immediate: true,  
             handler(value){                                
-                this.selectedItem = value;
-            }            
-        },
+                if (JSON.stringify(value) != JSON.stringify(this.selectedItem)){
+                    this.selectedItem = value;
+                }
+            }   
+        }
     }
 
 }
