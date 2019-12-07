@@ -145,8 +145,6 @@ header{height:49px;box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.5);padding:0;
 	background: linear-gradient(to bottom,  #212428 0%,#393e44 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#212428', endColorstr='#393e44',GradientType=0 ); /* IE6-9 */
 }
-h1{float:left;min-width:91px;height:37px;background:url("../images/common/logo_skt.png") no-repeat center center;border:none;color:#fff;margin:6px 0 0 14px;}
-h2{float:left;min-width:250px;height:28px;background:url("../images/common/logo_tms.png") no-repeat center center;border:none;color:#fff;margin:15px 48px 0 14px;}
 h1 span, h2 span{display:none;}
 nav{width:calc(100% - 417px);}
 /* GNB - depth1 */
